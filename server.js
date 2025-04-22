@@ -5,15 +5,23 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const app = express();
-app.use(cors());
+
+// ✅ Proper CORS configuration
+app.use(cors({
+  origin: "https://weatherapp.captianjack.tech",
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true
+}));
+
 app.use(bodyParser.json());
 
-// MongoDB Connection
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+// ✅ Mongoose Schema
 const WeatherSchema = new mongoose.Schema({
   city: String,
   country: String,
@@ -32,26 +40,34 @@ const WeatherSchema = new mongoose.Schema({
 
 const Weather = mongoose.model("Weather", WeatherSchema);
 
-// Store weather data
+// ✅ Store weather data
 app.post("/store_weather", async (req, res) => {
-  const data = req.body;
-  const weather = new Weather(data);
-  await weather.save();
-  res.json({ message: "Weather data stored", data });
-});
-
-// Get last stored weather data for a city
-app.get("/weather/:city", async (req, res) => {
-  const city = req.params.city;
-  const lastWeather = await Weather.findOne({ city }).sort({ timestamp: -1 });
-
-  if (lastWeather) {
-    res.json({ message: "Last searched weather", data: lastWeather });
-  } else {
-    res.status(404).json({ message: "No data found for this city" });
+  try {
+    const data = req.body;
+    const weather = new Weather(data);
+    await weather.save();
+    res.json({ message: "Weather data stored", data });
+  } catch (error) {
+    res.status(500).json({ message: "Error storing weather data", error });
   }
 });
 
-// Start server
+// ✅ Get last stored weather data for a city
+app.get("/weather/:city", async (req, res) => {
+  try {
+    const city = req.params.city;
+    const lastWeather = await Weather.findOne({ city }).sort({ timestamp: -1 });
+
+    if (lastWeather) {
+      res.json({ message: "Last searched weather", data: lastWeather });
+    } else {
+      res.status(404).json({ message: "No data found for this city" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching weather data", error });
+  }
+});
+
+// ✅ Start server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
