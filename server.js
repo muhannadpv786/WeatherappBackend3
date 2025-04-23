@@ -1,17 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
-
-// Updated CORS configuration
-app.use(cors({
-  origin: ['https://weatherapp.captianjack.tech', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
 
 app.use(bodyParser.json());
 
@@ -40,9 +31,6 @@ const WeatherSchema = new mongoose.Schema({
 });
 
 const Weather = mongoose.model("Weather", WeatherSchema);
-
-// Add a pre-flight OPTIONS handler for CORS
-app.options('*', cors());
 
 // Store weather data
 app.post("/store_weather", async (req, res) => {
