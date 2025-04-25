@@ -14,8 +14,8 @@ pipeline {
         // ECR & EKS Deployments
         ECR_REPO_URI = '650089658128.dkr.ecr.ap-south-1.amazonaws.com/backend3'
         CLUSTER_NAME = 'eks-cluster'
-        DEPLOYMENT_NAME = 'backend3'
-
+        DEPLOYMENT_NAME = 'dbope-service'
+ ns = 'backend-services'
         // Docker
         DOCKERFILE_DIR = '.'
         IMAGE_TAG = "${BUILD_NUMBER}"
@@ -90,7 +90,7 @@ pipeline {
                 withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDS_ID}" ]]) {
                     sh """
                         aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${REGION}
-                        kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${DOCKER_IMAGE_TAG}
+                        kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${DOCKER_IMAGE_TAG} -n ${ns}
                     """
                 }
             }
