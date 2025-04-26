@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Git settings
         GIT_CREDENTIALS_ID = 'Git'
-        GIT_REPO_URL = 'git@github.com:AaradhyaBodade1/WeatherappBackend3.git'
+        GIT_REPO_URL = 'git@github.com:muhannadpv786/WeatherappBackend3.git'
         GIT_BRANCH = 'main'
 
         // AWS + EKS
@@ -12,8 +12,8 @@ pipeline {
         AWS_CREDS_ID = 'aws-secret-key'
 
         // ECR & EKS Deployments
-        ECR_REPO_URI = '650089658128.dkr.ecr.ap-south-1.amazonaws.com/backend3'
-        CLUSTER_NAME = 'eks-cluster'
+        ECR_REPO_URI = '279707218273.dkr.ecr.ap-south-1.amazonaws.com/backend3'
+        CLUSTER_NAME = 'muhannad-cluster'
         DEPLOYMENT_NAME = 'dbope-service'
  ns = 'backend-services'
         // Docker
@@ -22,7 +22,7 @@ pipeline {
         DOCKER_IMAGE_TAG = "${ECR_REPO_URI}:${IMAGE_TAG}"
 
         // Email
-        EMAIL_RECIPIENTS = 'aaradhyabodade255@gmail.com'
+        EMAIL_RECIPIENTS = 'munnupv@gmail.com'
     }
 
     stages {
